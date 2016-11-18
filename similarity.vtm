@@ -1,0 +1,6 @@
+<VTKFile type="vtkMultiBlockDataSet" version="1.0" byte_order="LittleEndian" header_type="UInt64">
+  <vtkMultiBlockDataSet>
+    <DataSet index="0" name="T" file="similarity/similarity_0_0.vts">
+    </DataSet>
+  </vtkMultiBlockDataSet>
+</VTKFile>
