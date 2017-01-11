@@ -25,12 +25,14 @@ use TEST_MOD
 	! Variable zur Modus-Selektion (Kanalströmung, Taylor-Green etc...)
 	INTEGER :: Mode
 !	REAL::length_x=  0.001 ,length_y= 1.110446458202763e-04 ,length_z=  0.00000001
-	REAL::length_x=3e-2 ,length_y=0.05e-3,length_z= 1e-2
+!	REAL*8::length_x=3e-2 ,length_y=0.05e-3,length_z= 1e-2
 !REAL::length_x=  0.1 ,length_y= 8.72e-5,length_z=  0.1
+REAL*8::length_x=  1 ,length_y= 1,length_z=  1
+
 	!! Laufvariablen
-	INTEGER :: h,i,j,it,itmax
+	INTEGER :: h,i,j,it,itmax,d
 	! Abruchkrit
-	REAL::energy_temp,epsilon_energy,cfl,Re,simtime,olddt,v_0,w_0,u_help
+	REAL*8::energy_temp,epsilon_energy,cfl,Re,simtime,olddt,v_0,w_0,u_help
 
 
 !program start
@@ -230,8 +232,11 @@ call inputfileread(M,N,O,R,S,T_p,i,itmax,cfl,Re,Ma,mode)
 
 ! u_0=Ma*sqrt(gamma*R*T_0)
 !	u_0=Ma*sqrt(1.4*287*273)
-u_0=0.11495E+03	
-v_0=0.1
+!u_0=0.11495E+03	
+!v_0=0.1
+!w_0=0.1
+u_0=1	
+v_0=1
 w_0=0.1
 print *, " dx,dy,dz:",dx,dy,dz
    	dt = cfl*min(dx/abs(u_0),dy/abs(u_0),dz/abs(u_0)) !v_0=u_0
@@ -296,6 +301,9 @@ DO WHILE(it<itmax)
 	it=it+1
 
 
+
+
+
 	! Energie, Implsgleichungen etc...	
 	CALL Solver
 
@@ -303,7 +311,7 @@ DO WHILE(it<itmax)
  CALL BC(dx,dy)
 
 
-!print *, "solver endend"
+print *, "solver endend"
 	! Geschwindigkeitsfelder werden aktualisiert
 	CALL VEL_FELD
 SYNC ALL
@@ -312,12 +320,26 @@ CALL BC(dx,dy)
 CALL EN_FELD
 SYNC ALL
 CALL BC(dx,dy)
+!do i=1,m_local
+!do j=1,n_local
+!do d=1,o_local
+
+!if(T(i,j,d).NE.273 )then
+!print *, T(i,j,d),i,j,d
+!endif
+!end do
+!end do
+!end do
+
 	!Temperatur aus Energie- und GGeschwindigkeitsfeld 	
 CALL TEMP_FELD
 SYNC ALL
 CALL BC(dx,dy)
+
+
 ! Druck aus dem idealen Gas-Gesetz
 CALL DRUCK_FELD
+
 
 CALL BC(dx,dy)
 
@@ -390,6 +412,7 @@ print *, "Abweichung dt:",1.0-(olddt-dt)/olddt
 print *, "**********************************"
 end if
 
+
 simtime=simtime+dt
 ENDDO
 
@@ -398,14 +421,16 @@ IF(m_pos==1.AND.n_pos==1.AND.o_pos==1)THEN
 			PRINT *,"writing result.dat file..."
 		ENDIF
 
-CALL PRINT_ALL
+ CALL PRINT_ALL
 
 IF(m_pos==1.AND.n_pos==1.AND.o_pos==1)THEN
 			PRINT *,"result.dat file complete"
 		ENDIF
+!test routine für ableitungen
+! call test(dx,dy,dz)
 
 ! delocalisieren
-! call test(dx,dy,dz)
+
 	DEALLOCATE(rho,rho_u,rho_v,rho_w,rho_E,E,p,Epu,Epv,u,v,T,E_k,vis,mu,a)
 
 	DEALLOCATE(dphi,dphi1,dphi2,dphi3,dphi4,solve,sync_m_array,sync_n_array,du,dv,uinit,rinit,vinit,tinit)!,arr1,arr2,arr3,arr4,arr5,arr6

@@ -12,9 +12,11 @@ subroutine conti
 
 IMPLICIT NONE
 integer::i,j,k
+real::rho_0
 	!Ableitung rho_u nach x
-
+rho_0=1.293
 	CALL Dphi_Dx_p(rho_u,delta_u,qxi_i,qxi_nr,qxi_r)! !Dphi_Dx_p(phi,sphi,qi_i,qi_nr,qi_r,rel)
+
 
 
 !	dphi(1:m_local,1:n_local)=solve(1:m_local,1:n_local)
@@ -26,6 +28,7 @@ integer::i,j,k
 	CALL Dphi_Dz_p(rho_w,delta_w,qzi_i,qzi_nr,qzi_r)
 	! neues rho Berechnen
 
+
 !bc_2
 !call bcneu
 
@@ -35,6 +38,7 @@ integer::i,j,k
 +delta_w(1:m_local,1:n_local,1:o_local))
 
 
+rho_neu(1:m_local,1:n_local,1:o_local)=rho_0
 	CALL SYNC_NEIGHBOURS_P	! rho aktuell
 
 	RETURN

@@ -12,9 +12,9 @@ subroutine Dphi_Dz_p(phi,sphi,qi_i,qi_nr,qi_r)
 	IMPLICIT NONE
 
 	INTEGER::h,i,j,k,image(3)
-	REAL::phi(-1:m_local+2,-1:n_local+2,-1:o_local+2),sphi(1:m_local,1:n_local,1:o_local)
-	real::saver(-1:m_local+2,-1:n_local+2,-1:o_local+2)
-	REAL::qi_i,qi_r,qi_nr,rel
+	REAL*8::phi(-1:m_local+2,-1:n_local+2,-1:o_local+2),sphi(1:m_local,1:n_local,1:o_local)
+	real*8::saver(-1:m_local+2,-1:n_local+2,-1:o_local+2)
+	REAL*8::qi_i,qi_r,qi_nr,rel
 ! save phi
 saver(-1:m_local+2,-1:n_local+2,-1:o_local+2)=&
 phi(-1:m_local+2,-1:n_local+2,-1:o_local+2)
@@ -51,7 +51,9 @@ do I=1,m_local
 		end do
 	end do
 end do
-! sphi(1:m_local,1:n_local,1:o_local)=0.0 
+!set derivative to zero for testing
+! sphi(1:m_local,1:n_local,1:o_local)=0.0
+ 
 phi(-1:m_local+2,-1:n_local+2,-1:o_local+2)=&
 saver(-1:m_local+2,-1:n_local+2,-1:o_local+2)
 sync all

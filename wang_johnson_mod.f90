@@ -8,8 +8,8 @@ SUBROUTINE WANG_JOHNSSON_P_x(o_rank)
 	IMPLICIT NONE
 
 	INTEGER::i, o_rank,h,j
-	REAL::hi,zi
-	REAL::t_n,s_n
+	REAL*8::hi,zi
+	REAL*8::t_n,s_n
 	INTEGER::n_anfang,n_ende
 
 	!!SYNC
@@ -348,8 +348,8 @@ SUBROUTINE WANG_JOHNSSON_P_x_2(o_rank)
 	IMPLICIT NONE
 
 	INTEGER::i, o_rank,h,j
-	REAL::hi,zi
-	REAL::t_n,s_n
+	REAL*8::hi,zi
+	REAL*8::t_n,s_n
 	INTEGER::n_anfang,n_ende
 
 	!!SYNC
@@ -374,7 +374,7 @@ SUBROUTINE WANG_JOHNSSON_P_x_2(o_rank)
 	b_x(1)=0.
 	b_x(2:m_local-1)=alpha_i
 	b_x(m_local)=0.
-	c_x(1)=0.
+	c_x(1)=2.
 	c_x(2:m_local-1)=gamma_i
 	c_x(m_local)=0.
 
@@ -688,8 +688,8 @@ SUBROUTINE WANG_JOHNSSON_P_y(o_rank)
 	IMPLICIT NONE
 
 	INTEGER::i,o_rank
-	REAL::hi,zi
-	REAL::t_n,s_n
+	REAL*8::hi,zi
+	REAL*8::t_n,s_n
 	INTEGER::m_anfang,m_ende
 
 	!!SYNC
@@ -956,8 +956,8 @@ SUBROUTINE WANG_JOHNSSON_P_z(o_rank)
 	IMPLICIT NONE
 
 	INTEGER::i,o_rank
-	REAL::hi,zi
-	REAL::t_n,s_n
+	REAL*8::hi,zi
+	REAL*8::t_n,s_n
 	INTEGER::m_anfang,m_ende
 
 	!!SYNC
@@ -1158,8 +1158,8 @@ SUBROUTINE WANG_JOHNSSON_P_x_neu(o_rank)
 	IMPLICIT NONE
 
 	INTEGER::i, o_rank,h,j
-	REAL::hi,zi
-	REAL::t_n,s_n
+	REAL*8::hi,zi
+	REAL*8::t_n,s_n
 	INTEGER::n_anfang,n_ende
 
 	!!SYNC

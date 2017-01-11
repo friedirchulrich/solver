@@ -4,7 +4,7 @@ USE Variablen
 USE sync_mod
 USE wang_johnson_mod
 USE derivatives_y2_mod
-
+USE derivatives_x_mod
 CONTAINS
 
 
@@ -14,8 +14,9 @@ SUBROUTINE Dphi_Dy_p(phi,sphi,qi_i,qi_nr,qi_r) !Dphi_Dy_p(rho_u,solve,qxi_i,qxi_
 	IMPLICIT NONE
 
 	INTEGER::h,i,j,exi
-	REAL::phi(-1:m_local+2,-1:n_local+2,-1:o_local+2),sphi(1:m_local,1:n_local,1:o_local)
-	REAL::qi_i,qi_r,qi_nr,rel
+	REAL*8::phi(-1:m_local+2,-1:n_local+2,-1:o_local+2),sphi(1:m_local,1:n_local,1:o_local)
+	REAL*8::qi_i,qi_r,qi_nr,rel
+	real::saver(-1:m_local+2,-1:n_local+2,-1:o_local+2)
 	INTEGER::image(3)
 	CALL SYNC_NEIGHBOURS_P	
 
@@ -34,14 +35,14 @@ rel=1.0
 !if(rel==0)then
 !rel =1
 !end if
-exi=1
+exi=99
 if(exi==99)then
 Do h=1,o_local
     !Gitterzellen, Mitte, Nebenrand, Randrechts, Randlinks
 	IF(R==1.AND.S==1)THEN
 	
 	!RandUnten
-        y_y(1:m_local,1,1)=qi_r *(-5.*phi(1:m_local,1,h)+4.*phi(1:m_local,2,h)+phi(1:m_local,3,h))/rel
+        y_y(1:m_local,1,1)=qi_r *(4.*(phi(1:m_local,2,h)-phi(1:m_local,1,h))+(phi(1:m_local,3,h)-phi(1:m_local,1,h)))
 	
        !RandOben
        y_y(1:m_local,n_local,1)=0.0
@@ -102,13 +103,56 @@ Do h=1,o_local
 !	n_local=n_local-1
 	CALL WANG_JOHNSSON_P_y(image(3))
 !	n_local=n_local+1
-!	sphi(1:m_local,1:n_local,h)=x_y(1:m_local,1:n_local,1)*rel	!Dimensionierung	
+	sphi(1:m_local,1:n_local,h)=x_y(1:m_local,1:n_local,1)*rel	!Dimensionierung	
 	sphi(1:m_local,n_local,h)=0.0
 	CALL SYNC_NEIGHBOURS_P
 END DO
-
 endif
-CALL Dphi_Dy_2(phi,sphi,qi_i,qi_nr,qi_r)
+if(exi==89)then
+
+! save phi
+saver(-1:m_local+2,-1:n_local+2,-1:o_local+2)=&
+phi(-1:m_local+2,-1:n_local+2,-1:o_local+2)
+! transformation der Koordinaten
+! x ---> y
+! y ---> x
+! z ---> z
+sphi(1:m_local,1:n_local,1:o_local)=phi(1:m_local,1:n_local,1:o_local)
+!sphi(1:m_local,1:n_local,1)=phi(1:m_local,1:n_local,o_local-1)
+!sphi(1:m_local,1:n_local,2)=phi(1:m_local,1:n_local,o_local)
+do I=1,m_local
+	do j=1,n_local
+		do h=1,o_local
+			phi(i,j,h)=sphi(j,i,h)		
+		end do
+	end do
+end do
+
+
+CALL Dphi_Dx_p(phi,sphi,qi_i,qi_nr,qi_r)
+
+
+phi(1:m_local,1:n_local,1:o_local)=sphi(1:m_local,1:n_local,1:o_local)
+sync all
+! Rücktransformation der Koordinaten
+! x ---> x
+! y ---> z
+! z ---> y
+
+do I=1,m_local
+	do j=1,n_local
+		do h=1,o_local
+			sphi(i,j,h)=phi(j,i,h)	
+		end do
+	end do
+end do
+!SET DERIVATIVES TO ZERO
+!  sphi(1:m_local,1:n_local,1:o_local)=0.0 
+phi(-1:m_local+2,-1:n_local+2,-1:o_local+2)=&
+saver(-1:m_local+2,-1:n_local+2,-1:o_local+2)
+sync all
+endif
+!CALL Dphi_Dy_2(phi,sphi,qi_i,qi_nr,qi_r)
 !	 sphi(1:m_local,1:n_local,1:o_local)=0.0
 	RETURN
 

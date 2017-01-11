@@ -8,7 +8,7 @@ subroutine inputfileread(M,N,O,R,S,T_p,i,itmax,cfl,Re,Ma,mode)
 !variables
 CHARACTER(5)::inputfilename
 CHARACTER(10)::inputcommand
-real, intent(out):: Re,Ma
+real*8, intent(out):: Re,Ma,cfl
 integer, intent(out):: M,N,O,R,S,T_p,i,itmax,Mode
 logical:: Mset,Nset,Oset,Rset,Sset,Tset,itmaxset,cflset,modeset,Reset,MAset
 !subroutine program
@@ -146,6 +146,10 @@ read(21,*) inputcommand
 
 		IF(mode==4)THEN
 		print *, "Navier-Stokes"
+		END IF
+
+		IF(mode==5)THEN
+		print *, "Kanalströmung"
 		END IF
 
 	modeset=.TRUE.

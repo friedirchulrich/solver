@@ -13,12 +13,13 @@ USE spannungstensor_mod
 contains
 
 subroutine solver
+integer:: i,j,d
+
 
 	!wichtig
 	CALL SUTHERLAND
 !print *, "sutherland"
 	CALL tensor
-
 !print *, "tensor"
 !	CALL GC_EXCHANGE_P 
 
@@ -28,7 +29,6 @@ subroutine solver
 
 		CALL CONTI 
 !print *, "conti"
-
 		CALL XMOM
 !print *, "xmom"
 		CALL YMOM
@@ -37,6 +37,9 @@ subroutine solver
 !print *, "zmom"
 		CALL ENERGY
 !print *, "energy"
+
+!Überschreiben der neuen Zustandsvariablen
+! in die Alten
 rho(1:m_local,1:n_local,1:o_local)=&
 rho_neu(1:m_local,1:n_local,1:o_local)
 

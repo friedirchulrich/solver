@@ -11,12 +11,12 @@ IMPLICIT NONE
 
 integer::mode
 	INTEGER::h,i,j,dymax,dummy,d,l,f
-	REAL::pi,i_n,n_pi,m_pi,h_m,xh,yi
-	real::	v_init,x,y,z,dx,dy
-	real::  u_init,ybl(10000),eta(10000),rhobl(10000),tbl(10000),ubl(10000),rubl(10000)
-	real::rhobl1(10000),tbl1(10000),ubl1(10000),rubl1(10000),x_c(10000)
-	real:: ybl1(10000),sc,deta,v_ref,x0
-REAL,allocatable::ublrec(:,:), tblrec(:,:),rhoblrec(:,:),rublrec(:,:),rvblrec(:,:),rublrecsol(:,:)
+	REAL*8::pi,i_n,n_pi,m_pi,h_m,xh,yi
+	REAL*8::	v_init,x,y,z,dx,dy
+	REAL::  u_init,ybl(10000),eta(10000),rhobl(10000),tbl(10000),ubl(10000),rubl(10000)
+	REAL*8::rhobl1(10000),tbl1(10000),ubl1(10000),rubl1(10000),x_c(10000)
+	REAL*8:: ybl1(10000),sc,deta,v_ref,x0
+REAL*8,allocatable::ublrec(:,:), tblrec(:,:),rhoblrec(:,:),rublrec(:,:),rvblrec(:,:),rublrecsol(:,:)
 character::reader,car
 
 ALLOCATE(ublrec(N,M+10))
@@ -228,7 +228,6 @@ do i=1,dymax
 enddo
 ! Berechnung von rho*u der Grenzschricht
 
-
 !openfile
 print *, "close file!"
         close(99)
@@ -427,22 +426,22 @@ E(i,j,d),car,T(i,j,d),car,p(i,j,d)
 	ENDDO
 ENDDO
 
-do i=1,m_local
-do j=1,n_local
-do d=1,o_local
+!do i=1,m_local
+!do j=1,n_local
+!do d=1,o_local
 
-rho(i,j,d)=rho(i,j,40)
+!rho(i,j,d)=rho(i,j,40)
 
-u(i,j,d)=u(i,j,40)
-v(i,j,d)=v(i,j,40)
-w(i,j,d)=w(i,j,40)
-E(i,j,d)=E(i,j,40)
-T(i,j,d)=T(i,j,40)
-p(i,j,d)=p(i,j,40)
+!u(i,j,d)=u(i,j,40)
+!v(i,j,d)=v(i,j,40)
+!w(i,j,d)=w(i,j,40)
+!E(i,j,d)=E(i,j,40)
+!T(i,j,d)=T(i,j,40)
+!p(i,j,d)=p(i,j,40)
 
-end do
-end do
-end do
+!end do
+!end do
+!end do
 u_bc(1,1:n_local,-1:o_local+2)=u(1,1:n_local,-1:o_local+2)
 v_bc(1:m_local,1:n_local,-1:o_local+2)=v(1:m_local,1:n_local,-1:o_local+2)
 T_bc(1,1:n_local,-1:o_local+2)=T(1,1:n_local,-1:o_local+2)
@@ -470,12 +469,44 @@ end if
 
 if(mode==7) then
 u(1:m_local,1:n_local,1:o_local)=1.0
-v(1:m_local,1:n_local,1:o_local)=0.0
+v(1:m_local,1:n_local,1:o_local)=1.0
+w(1:m_local,1:n_local,1:o_local)=0.0
+T(1:m_local,1:n_local,1:o_local)=273.0
+rho(-1:m_local+2,-1:n_local+2,-1:o_local+2)=rho_0
+
+p(1:m_local,1:n_local,1:o_local)=rho_0*287.0*273.0
+
+E(-1:m_local+2,-1:n_local+2,-1:o_local+2)=rho(-1:m_local+2,-1:n_local+2,-1:o_local+2)*(&
+0.5*(u(-1:m_local+2,-1:n_local+2,-1:o_local+2)&
+**2+v(-1:m_local+2,-1:n_local+2,-1:o_local+2)**2&
++w(-1:m_local+2,-1:n_local+2,-1:o_local+2)**2)+T(-1:m_local+2,-1:n_local+2,-1:o_local+2)*717.5)
+
+rho_E(-1:m_local+2,-1:n_local+2,-1:o_local+2)=E(-1:m_local+2,-1:n_local+2,-1:o_local+2)&
+*rho(-1:m_local+2,-1:n_local+2,-1:o_local+2)
+
+rho_u(-1:m_local+2,-1:n_local+2,-1:o_local+2)=u(-1:m_local+2,-1:n_local+2,-1:o_local+2)&
+*rho(-1:m_local+2,-1:n_local+2,-1:o_local+2)
+	
+rho_v(-1:m_local+2,-1:n_local+2,-1:o_local+2)=rho(-1:m_local+2,-1:n_local+2,-1:o_local+2)&
+*v(-1:m_local+2,-1:n_local+2,-1:o_local+2)
+	
+rho_w(-1:m_local+2,-1:n_local+2,-1:o_local+2)=rho(-1:m_local+2,-1:n_local+2,-1:o_local+2)&
+*w(-1:m_local+2,-1:n_local+2,-1:o_local+2)
+endif
+
+if(mode==8) then
+do i=1,n_local
+!u(1:m_local,i,1:o_local)=1.0*i
+v(i,1:n_local,1:o_local)=1.0
+enddo
+!v(1:m_local,1:n_local,1:o_local)=1.0
+u(1:m_local,1:n_local,1:o_local)=3.0
 w(1:m_local,1:n_local,1:o_local)=0.0
 T(1:m_local,1:n_local,1:o_local)=273.0
 rho(1:m_local,1:n_local,1:o_local)=rho_0
 
 p(1:m_local,1:n_local,1:o_local)=rho_0*287.0*273.0
+
 
 E(-1:m_local+2,-1:n_local+2,-1:o_local+2)=rho(-1:m_local+2,-1:n_local+2,-1:o_local+2)*(&
 0.5*(u(-1:m_local+2,-1:n_local+2,-1:o_local+2)&

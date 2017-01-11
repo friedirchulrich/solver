@@ -13,8 +13,8 @@ SUBROUTINE Dphi_Dy_2(phi,sphi,qi_i,qi_nr,qi_r) !Dphi_Dy_p(rho_u,solve,qxi_i,qxi_
 	IMPLICIT NONE
 
 	INTEGER::h,i,j
-	REAL::phi(-1:m_local+2,-1:n_local+2,-1:o_local+2),sphi(1:m_local,1:n_local,1:o_local)
-	REAL::qi_i,qi_r,qi_nr,rel
+	REAL*8::phi(-1:m_local+2,-1:n_local+2,-1:o_local+2),sphi(1:m_local,1:n_local,1:o_local)
+	REAL*8::qi_i,qi_r,qi_nr,rel
 	INTEGER::image(3)
 	CALL SYNC_NEIGHBOURS_P	
 

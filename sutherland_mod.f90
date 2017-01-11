@@ -19,6 +19,7 @@ integer:: i,j,h
 !T_inf=275 !K
 ! Pr=0.72
 ! mu0=C1
+
 mu0=1.458*10.**(-6)
 Suth=110.4
  mu(1:m_local,1:n_local,1:o_local)=mu0*&
@@ -41,7 +42,7 @@ do I=1,m_local
 enddo
 !print *, mu(1:10,1:10,1:10)
 !read *, mu0
-
+mu(1:m_local,1:n_local,1:o_local)=mu0
 !cp=1004.5 cpo =: n
 n=1004.5
 Pr=0.72

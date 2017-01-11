@@ -1,0 +1,50 @@
+#***********************************
+#	Input-Filer
+#	for Simulation-Program
+#	Friedrich Ulrich, 2016
+#***********************************
+#  syntax
+#  Command
+#  and in the next line, the value
+#  Example
+#  M
+#  10
+#  any line that is not a command
+#  will be seen a comment
+#  The file has to end with END in
+#  capital letters
+#
+# Numer of Points in x-Direction
+M
+40
+# Number of Points in y-Direction
+N
+40
+# Number of Points in z-Direction
+O
+40
+# Number of Processes in x-Directionini
+R
+1
+# Number of Processes in y-Direction
+S
+1
+# Number of Processes in z-Direction
+T
+1
+# Number of iterations
+ITMAX
+100
+# CFL-Number
+# alter wert 0.1
+CFL
+0.1
+# Mach-Number
+MA
+0.0001
+# Select 
+#
+MODE
+8
+# End of input file
+END
